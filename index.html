@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SkyTrace — Live Flight Tracker</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>"/>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="src/css/style.css"/>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo">✈ SKYTRACE</span>
+      <span class="tagline">LIVE GLOBAL FLIGHT TRACKER</span>
+    </div>
+    <div class="header-right">
+      <div class="stat-pill" id="flight-count">
+        <span class="stat-label">AIRCRAFT</span>
+        <span class="stat-value" id="count-val">—</span>
+      </div>
+      <div class="stat-pill" id="last-updated">
+        <span class="stat-label">UPDATED</span>
+        <span class="stat-value" id="update-val">—</span>
+      </div>
+      <button class="refresh-btn" id="refresh-btn" title="Refresh">⟳</button>
+    </div>
+  </header>
+
+  <!-- Map -->
+  <div id="map"></div>
+
+  <!-- Side Panel -->
+  <div class="side-panel" id="side-panel">
+    <div class="panel-header">
+      <h2>FLIGHT DETAILS</h2>
+      <button class="close-btn" id="close-panel">✕</button>
+    </div>
+    <div id="panel-content">
+      <p class="panel-hint">Click any aircraft on the map to view details.</p>
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-box">
+    <input type="text" id="search-input" placeholder="Search callsign, country..." />
+    <button id="search-btn">🔍</button>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loading">
+    <div class="radar">
+      <div class="radar-circle"></div>
+      <div class="radar-circle"></div>
+      <div class="radar-circle"></div>
+      <div class="radar-sweep"></div>
+    </div>
+    <p>ACQUIRING SIGNAL...</p>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="src/js/app.js"></script>
+</body>
+</html>
