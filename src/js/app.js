@@ -1,7 +1,7 @@
 // SkyTrace — Flight Tracker App
 // Uses OpenSky Network public API (no API key needed)
 
-const API_URL = "https://opensky-network.org/api/states/all";
+const API_URL = "https://corsproxy.io/?https://opensky-network.org/api/states/all";
 const REFRESH_INTERVAL = 30000; // 30 seconds
 
 let map, planeLayerGroup;
