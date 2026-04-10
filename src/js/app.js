@@ -9,7 +9,7 @@ let map, planeLayerGroup;
 
 async function getToken() {
   try {
-    const res = await fetch("https://flight-proxy.chowdoryrintu.workers.dev", {
+    const res = await fetch("https://flight-proxy-qn52.onrender.com/flights", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: "grant_type=client_credentials&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET
@@ -58,7 +58,7 @@ async function fetchFlights() {
   setRefreshBtnSpinning(true);
   try {
     if (!accessToken) await getToken();
-    const res = await fetch("https://flight-proxy.chowdoryrintu.workers.dev", {
+    const res = await fetch("https://flight-proxy-qn52.onrender.com/flights", {
       headers: { "Authorization": "Bearer " + accessToken },
       signal: AbortSignal.timeout(10000)
     });
