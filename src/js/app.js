@@ -1,27 +1,8 @@
-
-const CLIENT_ID = "rintu-api-client";
-const CLIENT_SECRET = "mmbolKN31P1b2FffVzFUUeThPxGbLJyJ";
+const PROXY = "https://flight-proxy-qn52.onrender.com";
 const REFRESH_INTERVAL = 30000;
-let accessToken = null;
 let allFlights = [];
 let refreshTimer;
 let map, planeLayerGroup;
-
-async function getToken() {
-  try {
-    const res = await fetch("https://flight-proxy-qn52.onrender.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: "grant_type=client_credentials&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET
-    });
-    const data = await res.json();
-    accessToken = data.access_token;
-    console.log("Token OK");
-  } catch(e) {
-    console.error("Token error:", e);
-    accessToken = null;
-  }
-}
 
 function initMap() {
   map = L.map("map", { center: [20, 0], zoom: 3, zoomControl: false, attributionControl: false });
@@ -45,9 +26,6 @@ function loadDemoData() {
     {icao24:"f12345",callsign:"AAL100",country:"USA",lat:33.9,lon:-118.4,altitude:9200,onGround:false,velocity:860,heading:90,vertRate:2},
     {icao24:"g12345",callsign:"TK1",country:"Turkey",lat:41.0,lon:28.8,altitude:10600,onGround:false,velocity:885,heading:45,vertRate:-1},
     {icao24:"h12345",callsign:"KLM892",country:"Netherlands",lat:52.3,lon:4.8,altitude:11400,onGround:false,velocity:905,heading:225,vertRate:0},
-    {icao24:"i12345",callsign:"DLH789",country:"Germany",lat:48.4,lon:11.8,altitude:8500,onGround:false,velocity:840,heading:135,vertRate:3},
-    {icao24:"j12345",callsign:"IBE34",country:"Spain",lat:40.5,lon:-3.6,altitude:10200,onGround:false,velocity:870,heading:180,vertRate:-2},
-    {icao24:"k12345",callsign:"CHH7312",country:"China",lat:39.9,lon:116.4,altitude:11000,onGround:false,velocity:915,heading:60,vertRate:0},
   ];
   renderPlanes(allFlights);
   updateStats("DEMO");
@@ -57,16 +35,7 @@ function loadDemoData() {
 async function fetchFlights() {
   setRefreshBtnSpinning(true);
   try {
-    if (!accessToken) await getToken();
-    const res = await fetch("https://flight-proxy-qn52.onrender.com", {
-      headers: { "Authorization": "Bearer " + accessToken },
-      signal: AbortSignal.timeout(10000)
-    });
-    if (res.status === 401) {
-      accessToken = null;
-      await getToken();
-      throw new Error("Token refreshed, retry next cycle");
-    }
+    const res = await fetch(PROXY, { signal: AbortSignal.timeout(15000) });
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
     allFlights = (data.states || []).map(function(s) {
@@ -98,21 +67,22 @@ function renderPlanes(flights) {
   planeLayerGroup.clearLayers();
   flights.forEach(function(flight) {
     var icon = L.divIcon({
-      html: '<div class="plane-marker" style="transform:rotate(' + (flight.heading || 0) + 'deg)">&#9992;</div>',
+      html: '<div class="plane-marker" style="transform:rotate(' + (flight.heading||0) + 'deg)">&#9992;</div>',
       className: "", iconSize: [20,20], iconAnchor: [10,10],
     });
-    var marker = L.marker([flight.lat, flight.lon], { icon: icon }).addTo(planeLayerGroup);
-    marker.on("click", function() { showFlightPanel(flight); });
+    L.marker([flight.lat, flight.lon], { icon: icon })
+      .addTo(planeLayerGroup)
+      .on("click", function() { showFlightPanel(flight); });
   });
 }
 
 function showFlightPanel(flight) {
-  var alt  = flight.altitude ? Math.round(flight.altitude).toLocaleString() + " m" : "—";
-  var spd  = flight.velocity ? Math.round(flight.velocity * 1.944) + " kts" : "—";
-  var hdg  = flight.heading  !== null ? Math.round(flight.heading) + "°" : "—";
-  var vr   = flight.vertRate !== null ? Math.round(flight.vertRate) + " m/s" : "—";
-  var sc   = flight.onGround ? "status-ground" : "status-airborne";
-  var st   = flight.onGround ? "ON GROUND" : "AIRBORNE";
+  var alt = flight.altitude ? Math.round(flight.altitude).toLocaleString() + " m" : "—";
+  var spd = flight.velocity ? Math.round(flight.velocity * 1.944) + " kts" : "—";
+  var hdg = flight.heading  !== null ? Math.round(flight.heading) + "°" : "—";
+  var vr  = flight.vertRate !== null ? Math.round(flight.vertRate) + " m/s" : "—";
+  var sc  = flight.onGround ? "status-ground" : "status-airborne";
+  var st  = flight.onGround ? "ON GROUND" : "AIRBORNE";
   document.getElementById("panel-content").innerHTML =
     '<div class="flight-card">' +
     '<div class="callsign-display">' + flight.callsign + '</div>' +
@@ -133,12 +103,12 @@ function showFlightPanel(flight) {
 }
 
 function handleSearch() {
-  var query = document.getElementById("search-input").value.trim().toLowerCase();
-  if (!query) { renderPlanes(allFlights); return; }
+  var q = document.getElementById("search-input").value.trim().toLowerCase();
+  if (!q) { renderPlanes(allFlights); return; }
   var filtered = allFlights.filter(function(f) {
-    return f.callsign.toLowerCase().includes(query) ||
-           f.country.toLowerCase().includes(query) ||
-           f.icao24.toLowerCase().includes(query);
+    return f.callsign.toLowerCase().includes(q) ||
+           f.country.toLowerCase().includes(q) ||
+           f.icao24.toLowerCase().includes(q);
   });
   renderPlanes(filtered);
   document.getElementById("count-val").textContent = filtered.length;
@@ -147,7 +117,7 @@ function handleSearch() {
 function updateStats(count) {
   document.getElementById("count-val").textContent = count;
   var now = new Date();
-  document.getElementById("update-val").textContent = now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  document.getElementById("update-val").textContent = now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
 
 function hideLoading() {
@@ -157,8 +127,7 @@ function hideLoading() {
 
 function setRefreshBtnSpinning(yes) {
   var btn = document.getElementById("refresh-btn");
-  if (yes) btn.classList.add("spinning");
-  else btn.classList.remove("spinning");
+  if (btn) { if(yes) btn.classList.add("spinning"); else btn.classList.remove("spinning"); }
 }
 
 document.getElementById("refresh-btn").addEventListener("click", function() {
