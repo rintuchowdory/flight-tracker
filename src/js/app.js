@@ -1,7 +1,12 @@
 // SkyTrace — Flight Tracker App
 // Uses OpenSky Network public API (no API key needed)
 
-const API_URL = "https://corsproxy.io/?https://opensky-network.org/api/states/all";
+const OPENSKY_URL = "https://opensky-network.org/api/states/all";
+const PROXIES = [
+  "https://api.allorigins.win/raw?url=",
+  "https://corsproxy.io/?",
+  "https://proxy.cors.sh/",
+];
 const REFRESH_INTERVAL = 30000; // 30 seconds
 
 let map, planeLayerGroup;
@@ -32,7 +37,14 @@ function initMap() {
 async function fetchFlights() {
   setRefreshBtnSpinning(true);
   try {
-    const res = await fetch(API_URL);
+    let res = null;
+    for (const proxy of PROXIES) {
+      try {
+        res = await fetch(proxy + encodeURIComponent(OPENSKY_URL), { signal: AbortSignal.timeout(8000) });
+        if (res.ok) break;
+      } catch(e) { continue; }
+    }
+    if (!res || !res.ok) throw new Error("All proxies failed");
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
