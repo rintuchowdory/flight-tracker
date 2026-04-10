@@ -1,12 +1,7 @@
 // SkyTrace — Flight Tracker App
 // Uses OpenSky Network public API (no API key needed)
 
-const OPENSKY_URL = "https://opensky-network.org/api/states/all";
-const PROXIES = [
-  "https://api.allorigins.win/raw?url=",
-  "https://corsproxy.io/?",
-  "https://proxy.cors.sh/",
-];
+// Using adsb.lol - free, no key, CORS enabled
 const REFRESH_INTERVAL = 30000; // 30 seconds
 
 let map, planeLayerGroup;
@@ -37,29 +32,22 @@ function initMap() {
 async function fetchFlights() {
   setRefreshBtnSpinning(true);
   try {
-    let res = null;
-    for (const proxy of PROXIES) {
-      try {
-        res = await fetch(proxy + encodeURIComponent(OPENSKY_URL), { signal: AbortSignal.timeout(8000) });
-        if (res.ok) break;
-      } catch(e) { continue; }
-    }
-    if (!res || !res.ok) throw new Error("All proxies failed");
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const res = await fetch("https://api.adsb.lol/v2/all", { signal: AbortSignal.timeout(10000) });
+    if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
 
-    allFlights = (data.states || []).map(s => ({
-      icao24:    s[0],
-      callsign:  (s[1] || "").trim() || "UNKNOWN",
-      country:   s[2] || "Unknown",
-      lon:       s[5],
-      lat:       s[6],
-      altitude:  s[7],
-      onGround:  s[8],
-      velocity:  s[9],
-      heading:   s[10],
-      vertRate:  s[11],
-    })).filter(f => f.lat !== null && f.lon !== null);
+    allFlights = (data.ac || []).map(a => ({
+      icao24:   a.hex || "",
+      callsign: (a.flight || a.r || "UNKNOWN").trim(),
+      country:  a.r || "Unknown",
+      lon:      a.lon,
+      lat:      a.lat,
+      altitude: a.alt_baro || a.alt_geom || 0,
+      onGround: a.alt_baro === "ground",
+      velocity: a.gs || 0,
+      heading:  a.track || 0,
+      vertRate: a.baro_rate || 0,
+    })).filter(f => f.lat && f.lon);
 
     renderPlanes(allFlights);
     updateStats(allFlights.length);
