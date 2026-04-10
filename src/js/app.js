@@ -1,4 +1,19 @@
 // SkyTrace — Flight Tracker App
+
+const CLIENT_ID = "rintu-api-client";
+const CLIENT_SECRET = "mmbolKN31P1b2FffVzFUUeThPxGbLJyJ";
+let accessToken = null;
+
+async function getToken() {
+  const res = await fetch("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: "grant_type=client_credentials&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET
+  });
+  const data = await res.json();
+  accessToken = data.access_token;
+}
+
 // Uses OpenSky Network public API (no API key needed)
 
 // Using adsb.lol - free, no key, CORS enabled
