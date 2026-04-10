@@ -56,7 +56,7 @@ async function fetchFlights() {
     updateStats(allFlights.length);
     hideLoading();
   } catch(err) {
-    console.error("Failed to fetch flights:", err);
+    console.error("Failed:", err);
     loadDemoData();
   } finally {
     setRefreshBtnSpinning(false);
@@ -84,20 +84,20 @@ function showFlightPanel(flight) {
   var sc  = flight.onGround ? "status-ground" : "status-airborne";
   var st  = flight.onGround ? "ON GROUND" : "AIRBORNE";
   document.getElementById("panel-content").innerHTML =
-    '<div class="flight-card">' +
-    '<div class="callsign-display">' + flight.callsign + '</div>' +
-    '<div class="country-label">' + flight.country.toUpperCase() + '</div>' +
-    '<span class="status-badge ' + sc + '">' + st + '</span>' +
-    '<div class="data-grid" style="margin-top:16px">' +
-    '<div class="data-cell"><span class="data-cell-label">ALTITUDE</span><span class="data-cell-value">' + alt + '</span></div>' +
-    '<div class="data-cell"><span class="data-cell-label">SPEED</span><span class="data-cell-value">' + spd + '</span></div>' +
-    '<div class="data-cell"><span class="data-cell-label">HEADING</span><span class="data-cell-value">' + hdg + '</span></div>' +
-    '<div class="data-cell"><span class="data-cell-label">VERT RATE</span><span class="data-cell-value">' + vr + '</span></div>' +
-    '<div class="data-cell"><span class="data-cell-label">LAT</span><span class="data-cell-value">' + flight.lat.toFixed(4) + '</span></div>' +
-    '<div class="data-cell"><span class="data-cell-label">LON</span><span class="data-cell-value">' + flight.lon.toFixed(4) + '</span></div>' +
-    '</div>' +
-    '<div class="data-cell" style="margin-top:8px"><span class="data-cell-label">ICAO24</span><span class="data-cell-value">' + flight.icao24.toUpperCase() + '</span></div>' +
-    '</div>';
+    "<div class='flight-card'>" +
+    "<div class='callsign-display'>" + flight.callsign + "</div>" +
+    "<div class='country-label'>" + flight.country.toUpperCase() + "</div>" +
+    "<span class='status-badge " + sc + "'>" + st + "</span>" +
+    "<div class='data-grid' style='margin-top:16px'>" +
+    "<div class='data-cell'><span class='data-cell-label'>ALTITUDE</span><span class='data-cell-value'>" + alt + "</span></div>" +
+    "<div class='data-cell'><span class='data-cell-label'>SPEED</span><span class='data-cell-value'>" + spd + "</span></div>" +
+    "<div class='data-cell'><span class='data-cell-label'>HEADING</span><span class='data-cell-value'>" + hdg + "</span></div>" +
+    "<div class='data-cell'><span class='data-cell-label'>VERT RATE</span><span class='data-cell-value'>" + vr + "</span></div>" +
+    "<div class='data-cell'><span class='data-cell-label'>LAT</span><span class='data-cell-value'>" + flight.lat.toFixed(4) + "</span></div>" +
+    "<div class='data-cell'><span class='data-cell-label'>LON</span><span class='data-cell-value'>" + flight.lon.toFixed(4) + "</span></div>" +
+    "</div>" +
+    "<div class='data-cell' style='margin-top:8px'><span class='data-cell-label'>ICAO24</span><span class='data-cell-value'>" + flight.icao24.toUpperCase() + "</span></div>" +
+    "</div>";
   document.getElementById("side-panel").classList.add("open");
   map.flyTo([flight.lat, flight.lon], Math.max(map.getZoom(), 5), { duration: 1.2 });
 }
