@@ -61,6 +61,16 @@ async function fetchFlights() {
       {icao24:"406943",callsign:"BAW217",country:"UK",lat:53.4,lon:-2.2,altitude:9500,onGround:false,velocity:880,heading:180,vertRate:2},
       {icao24:"a12345",callsign:"UAL890",country:"USA",lat:40.6,lon:-73.8,altitude:12000,onGround:false,velocity:920,heading:45,vertRate:1},
       {icao24:"71be60",callsign:"AFR456",country:"France",lat:43.6,lon:1.4,altitude:10500,onGround:false,velocity:870,heading:315,vertRate:-2},
+      {icao24:"b12345",callsign:"JAL516",country:"Japan",lat:35.6,lon:139.7,altitude:9800,onGround:false,velocity:910,heading:200,vertRate:0},
+      {icao24:"c12345",callsign:"SIA321",country:"Singapore",lat:1.3,lon:103.8,altitude:11200,onGround:false,velocity:895,heading:30,vertRate:1},
+      {icao24:"d12345",callsign:"QFA12",country:"Australia",lat:-33.9,lon:151.2,altitude:10800,onGround:false,velocity:875,heading:315,vertRate:-1},
+      {icao24:"e12345",callsign:"EK201",country:"UAE",lat:25.2,lon:55.4,altitude:12000,onGround:false,velocity:930,heading:270,vertRate:0},
+      {icao24:"f12345",callsign:"AAL100",country:"USA",lat:33.9,lon:-118.4,altitude:9200,onGround:false,velocity:860,heading:90,vertRate:2},
+      {icao24:"g12345",callsign:"TK1",country:"Turkey",lat:41.0,lon:28.8,altitude:10600,onGround:false,velocity:885,heading:45,vertRate:-1},
+      {icao24:"h12345",callsign:"KLM892",country:"Netherlands",lat:52.3,lon:4.8,altitude:11400,onGround:false,velocity:905,heading:225,vertRate:0},
+      {icao24:"i12345",callsign:"DLH789",country:"Germany",lat:48.4,lon:11.8,altitude:8500,onGround:false,velocity:840,heading:135,vertRate:3},
+      {icao24:"j12345",callsign:"IBE34",country:"Spain",lat:40.5,lon:-3.6,altitude:10200,onGround:false,velocity:870,heading:180,vertRate:-2},
+      {icao24:"k12345",callsign:"CHH7312",country:"China",lat:39.9,lon:116.4,altitude:11000,onGround:false,velocity:915,heading:60,vertRate:0},
     ];
     renderPlanes(allFlights);
     updateStats("DEMO");
