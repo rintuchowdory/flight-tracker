@@ -54,7 +54,16 @@ async function fetchFlights() {
     hideLoading();
   } catch (err) {
     console.error("Failed to fetch flights:", err);
-    document.getElementById("count-val").textContent = "ERR";
+    // Load demo data so map is not empty
+    allFlights = [
+      {icao24:"3c6444",callsign:"DLH400",country:"Germany",lat:51.5,lon:8.2,altitude:10000,onGround:false,velocity:900,heading:270,vertRate:-1},
+      {icao24:"4ca7a3",callsign:"RYR123",country:"Ireland",lat:48.2,lon:11.5,altitude:11000,onGround:false,velocity:850,heading:90,vertRate:0},
+      {icao24:"406943",callsign:"BAW217",country:"UK",lat:53.4,lon:-2.2,altitude:9500,onGround:false,velocity:880,heading:180,vertRate:2},
+      {icao24:"a12345",callsign:"UAL890",country:"USA",lat:40.6,lon:-73.8,altitude:12000,onGround:false,velocity:920,heading:45,vertRate:1},
+      {icao24:"71be60",callsign:"AFR456",country:"France",lat:43.6,lon:1.4,altitude:10500,onGround:false,velocity:870,heading:315,vertRate:-2},
+    ];
+    renderPlanes(allFlights);
+    updateStats("DEMO");
     hideLoading();
   } finally {
     setRefreshBtnSpinning(false);
