@@ -9,7 +9,7 @@ let map, planeLayerGroup;
 
 async function getToken() {
   try {
-    const res = await fetch("https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token", {
+    const res = await fetch("https://flight-proxy.chowdoryrintu.workers.dev", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: "grant_type=client_credentials&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET
@@ -58,7 +58,7 @@ async function fetchFlights() {
   setRefreshBtnSpinning(true);
   try {
     if (!accessToken) await getToken();
-    const res = await fetch("https://opensky-network.org/api/states/all", {
+    const res = await fetch("https://flight-proxy.chowdoryrintu.workers.dev", {
       headers: { "Authorization": "Bearer " + accessToken },
       signal: AbortSignal.timeout(10000)
     });
