@@ -1,0 +1,15 @@
+# Cache static assets for 1 hour
+/src/css/*
+  Cache-Control: public, max-age=3600
+
+/src/js/*
+  Cache-Control: public, max-age=3600
+
+/*.html
+  Cache-Control: public, max-age=3600
+
+/impressum.html
+  Cache-Control: public, max-age=3600
+
+/datenschutz.html
+  Cache-Control: public, max-age=3600
